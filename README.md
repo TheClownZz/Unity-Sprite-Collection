@@ -1,1 +1,1 @@
-A project about soft body in Unity
+A project about some technical in Unity
