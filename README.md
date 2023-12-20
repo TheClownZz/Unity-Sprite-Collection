@@ -1,1 +1,1 @@
-A project about some technical in Unity
+A sprite collection in Unity
