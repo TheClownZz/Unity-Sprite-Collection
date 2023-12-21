@@ -1,7 +1,7 @@
 ﻿using Unity.VisualScripting;
 using UnityEngine;
 
-namespace SnSMovement.Character
+namespace SnS
 {
     public class SquashAndStretchController : MonoBehaviour
     {
