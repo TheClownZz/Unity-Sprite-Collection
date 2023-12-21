@@ -12,7 +12,6 @@ Shader "Sprites/SpriteOutline"
         [PerRendererData] _AlphaTex ("External Alpha", 2D) = "white" { }
         [PerRendererData] _EnableExternalAlpha ("Enable External Alpha", Float) = 0
 
-        [MaterialToggle] _Outline ("Outline", Float) = 0
         _OutlineColor ("Outline Color", Color) = (1, 1, 1, 1)
         _OutlineSize ("_Outline Size", Range(1, 10)) = 1
     }
@@ -35,19 +34,21 @@ Shader "Sprites/SpriteOutline"
             #pragma multi_compile_instancing
             #pragma multi_compile _ PIXELSNAP_ON
             #pragma multi_compile _ ETC1_EXTERNAL_ALPHA
+            #pragma shader_feature _OnlyOutline
+
             #include "UnitySprites.cginc"
 
             float _Outline;
             float4 _OutlineColor;
             float4 _MainTex_TexelSize;
             float _OutlineSize; //outline size
-
+            
             fixed4 frag(v2f IN) : SV_Target
             {
-                fixed4 col = SampleSpriteTexture(IN.texcoord) * IN.color;
+                fixed4 col = SampleSpriteTexture(IN.texcoord);
                 col.rgb *= col.a;
 
-                if (_Outline > 0 && col.a == 0 && IN.color.a > 0)
+                if (col.a == 0 && IN.color.a > 0)
                 {
                     fixed4 pixelUp = tex2D(_MainTex, IN.texcoord + fixed2(0, _MainTex_TexelSize.y * _OutlineSize));
                     fixed4 pixelDown = tex2D(_MainTex, IN.texcoord - fixed2(0, _MainTex_TexelSize.y * _OutlineSize));
@@ -65,4 +66,5 @@ Shader "Sprites/SpriteOutline"
             ENDCG
         }
     }
+    CustomEditor "ShaderFeatureCustom"
 }
