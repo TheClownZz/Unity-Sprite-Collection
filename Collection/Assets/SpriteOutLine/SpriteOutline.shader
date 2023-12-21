@@ -42,13 +42,13 @@ Shader "Sprites/SpriteOutline"
             float4 _OutlineColor;
             float4 _MainTex_TexelSize;
             float _OutlineSize; //outline size
-            
+
             fixed4 frag(v2f IN) : SV_Target
             {
                 fixed4 col = SampleSpriteTexture(IN.texcoord);
                 col.rgb *= col.a;
 
-                if (col.a == 0 && IN.color.a > 0)
+                if (col.a == 0)
                 {
                     fixed4 pixelUp = tex2D(_MainTex, IN.texcoord + fixed2(0, _MainTex_TexelSize.y * _OutlineSize));
                     fixed4 pixelDown = tex2D(_MainTex, IN.texcoord - fixed2(0, _MainTex_TexelSize.y * _OutlineSize));
@@ -61,7 +61,13 @@ Shader "Sprites/SpriteOutline"
                     }
                 }
 
-                return col * IN.color;
+                #if _OnlyOutline
+                    else
+                    {
+                        discard;
+                    }
+                #endif
+                return col;
             }
             ENDCG
         }
